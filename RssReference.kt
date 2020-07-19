@@ -51,14 +51,14 @@ class RssReference(private var connection: Connection,
     @Synchronized
     fun evaluate(forceEval: Boolean, initiator: RssReference) {
         if (!isEvaluated() || forceEval) {
-            val myDocument = if (parent == null) {
+            val myDocument = if (isFirstReference()) {
                 lazyConnection()
             } else {
-                parent.evaluate(forceEval, initiator)
+                parent!!.evaluate(forceEval, initiator)
                 parent.asDocument()
             }
 
-            if (this == initiator || parent == null || hasSortStrategy())
+            if (this == initiator || isFirstReference() || hasSortStrategy())
                 parseMyDocument(myDocument)
         }
     }
