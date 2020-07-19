@@ -8,7 +8,7 @@ class RssPoller(val rssReference: RssReference, var interval: Long) {
     private var callback: Callback? = null
 
     fun start() {
-        if (pollingThread == null) {
+        if (!isPolling()) {
             pollingThread = PollingThread()
             pollingThread?.start()
         }
