@@ -1,4 +1,4 @@
-package rssfeeder.recyclerview
+package rsspoller.recyclerview
 
 import android.app.Activity
 import androidx.recyclerview.widget.RecyclerView

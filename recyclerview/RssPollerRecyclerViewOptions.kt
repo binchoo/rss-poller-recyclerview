@@ -1,4 +1,4 @@
-package rssfeeder.recyclerview
+package rsspoller.recyclerview
 
 import rsspoller.RssReference
 import java.lang.NullPointerException
