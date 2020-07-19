@@ -9,7 +9,7 @@ import kotlin.collections.HashMap
 class RssReference(private var connection: Connection,
                    private val cssQuery: String, val parent: RssReference?) {
 
-    constructor(connection: Connection): this(connection, QUERY_DEFAULT, null)
+    constructor(connection: Connection): this(connection, QUERY_EMPTY, null)
     constructor(connection: Connection, cssQuery: String): this(connection, cssQuery, null)
 
     private lateinit var document: Document //only the first reference can possess a late-initialized document.
@@ -63,7 +63,7 @@ class RssReference(private var connection: Connection,
         }
     }
 
-    fun lazyConnection(): Document {
+    private fun lazyConnection(): Document {
         document = connection.get()
         return document
     }
@@ -95,7 +95,7 @@ class RssReference(private var connection: Connection,
         elementsCache[cssQuery] != null
 
     fun isQuerySpecified(): Boolean =
-        !cssQuery.equals(QUERY_DEFAULT)
+        !cssQuery.equals(QUERY_EMPTY)
 
     fun isFirstReference(): Boolean =
         parent == null
@@ -104,6 +104,6 @@ class RssReference(private var connection: Connection,
         sortStrategy != null
 
     companion object {
-        private val QUERY_DEFAULT = ""
+        private val QUERY_EMPTY = ""
     }
 }
