@@ -29,11 +29,11 @@ class MyRssRecyclerViewAdapter(activity: Activity, options: RssPollerRecyclerVie
     }
 }
 ```
- 3. Create a RssFeed object. RssFeed abstracts a RSS document (any XML/HTML document) on the web.
+ 3. Create a `RssFeed` object. `RssFeed` abstracts a RSS document (any XML/HTML document) on the web.
  4. Point the place where you want to get by calling `RssFeed.getReference(cssQuery: String)`, `RssReference.child(cssQuery: String)`.
  5. You can sort the elements reference by reference. Use `RssReference.sort()` where a `SortStrategy` must be injected.
- 6. To let a recyclerview reflect the update the RssReference receives, build a `RssPollerRecyclerViewOptions`.
- 6. Inject it into your `RssPollerRecyclerViewAdapter`. Now then, make the recyclerview use your adapter.
+ 6. To have a `RecyclerView` reflect the update the RssReference receives, build a `RssPollerRecyclerViewOptions`.
+ 6. Inject it into your `RssPollerRecyclerViewAdapter`. Now then, make the `RecyclerView` use your adapter.
  ```kotlin
 //somewhere in MainActivity.kt
     fun loadRssFeed() {
@@ -55,4 +55,4 @@ class MyRssRecyclerViewAdapter(activity: Activity, options: RssPollerRecyclerVie
  - ~~Add lazy evaluation feature for RssReference~~
  - ~~Fix race condition when executing lazy evaluation~~
  - ~~Add lazy evaluation feature for Document~~
- - ~~Fix malfunction of connection towoard RSS formatted document. (on JVM Kotlin environment only)
+ - Fix malfunction of connection toward RSS formatted document. (on JVM Kotlin environment only)
