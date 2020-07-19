@@ -1,26 +1,18 @@
 package rsspoller
 
 import org.jsoup.nodes.Document
+import org.jsoup.Connection
 import org.jsoup.select.Elements
 import rsspoller.sort.SortStrategy
-import java.util.*
 import kotlin.collections.HashMap
 
-class RssReference(private var document: Document,
+class RssReference(private var connection: Connection,
                    private val cssQuery: String, val parent: RssReference?) {
 
-    constructor(document: Document): this(document, QUERY_DEFAULT, null)
-    constructor(document: Document, cssQuery: String): this(document, cssQuery, null)
+    constructor(connection: Connection): this(connection, QUERY_DEFAULT, null)
+    constructor(connection: Connection, cssQuery: String): this(connection, cssQuery, null)
 
-    private var evalQueue: LinkedList<RssReference> =
-        if (parent == null) {
-            LinkedList()
-        } else {
-            parent.evalQueue.clone() as LinkedList<RssReference>
-        }.also {evalQueue->
-            evalQueue.add(this)
-        }
-
+    private lateinit var document: Document //only the first reference can possess late-initialized document.
     var sortStrategy: SortStrategy<*>? = null
         private set
 
@@ -28,7 +20,7 @@ class RssReference(private var document: Document,
 
     fun child(cssQuery: String): RssReference {
         val childCssQuery = concatQuery(cssQuery)
-        return RssReference(document, childCssQuery, this)
+        return RssReference(connection, childCssQuery, this)
     }
 
     private fun concatQuery(cssQuery: String): String {
@@ -48,26 +40,44 @@ class RssReference(private var document: Document,
 
     /**
      * @param forceEval whether or not to force the lazy evaluation. Default true.
-     * @return Elements, read from cache if forceEval=false, else newly evaluated.
+     * @return Elements newly evaluated if forceEval=true or isEvalutated()=false, else read from cache.
      * @author binchoo
      */
-    @Synchronized
     fun elems(forceEval: Boolean = true): Elements {
-        return evaluateQueue(evalQueue, forceEval)
+        evaluate(forceEval, this)
+        return cachedElementsNonNull()
     }
 
-    fun isQuerySpecified(): Boolean =
-        !cssQuery.equals(QUERY_DEFAULT)
+    @Synchronized
+    fun evaluate(forceEval: Boolean, initiator: RssReference) {
+        if (!isEvaluated() || forceEval) {
+            val myDocument = if (parent == null) {
+                lazyConnection()
+            } else {
+                parent.evaluate(forceEval, initiator)
+                parent.asDocument()
+            }
 
-    fun isEvaluated(): Boolean =
-        elementsCache[cssQuery] != null
+            if (this == initiator || parent == null || hasSortStrategy())
+                parseMyDocument(myDocument)
+        }
+    }
 
-    fun hasSortStrategy(): Boolean =
-        sortStrategy != null
+    fun lazyConnection(): Document {
+        document = connection.get()
+        return document
+    }
 
-    private fun writeToCache() {
-        val elems =
-            if (isQuerySpecified())
+    private fun asDocument(): Document {
+        return if (isFirstReference())
+            document
+        else Document("").also {document->
+            document.html(cachedElementsNonNull().html())
+        }
+    }
+
+    private fun parseMyDocument(document: Document) {
+        val elems = if (isQuerySpecified())
                 document.select(cssQuery)
             else
                 document.allElements
@@ -75,38 +85,25 @@ class RssReference(private var document: Document,
         elementsCache.put(cssQuery, elems)
     }
 
-    fun readFromCache() =
+    fun cachedElements() =
         elementsCache[cssQuery]
 
-    private fun readFromCacheNotNull() =
-        readFromCache()!!
+    private fun cachedElementsNonNull() =
+        cachedElements()!!
+
+    fun isEvaluated(): Boolean =
+        elementsCache[cssQuery] != null
+
+    fun isQuerySpecified(): Boolean =
+        !cssQuery.equals(QUERY_DEFAULT)
+
+    fun isFirstReference(): Boolean =
+        parent == null
+
+    fun hasSortStrategy(): Boolean =
+        sortStrategy != null
 
     companion object {
         private val QUERY_DEFAULT = ""
-
-        private fun evaluateQueue(referenceEvalQueue: Queue<RssReference>, forceEval: Boolean): Elements {
-            val last = referenceEvalQueue.last()
-            var subDocument = referenceEvalQueue.first().document
-
-            referenceEvalQueue.forEach { ref ->
-                if (ref == last || ref.hasSortStrategy()) {
-                    ref.document = subDocument
-                    subDocument = elems2doc(evaluateReference(ref, forceEval))
-                }
-            }
-            return last.readFromCacheNotNull()
-        }
-
-        private fun evaluateReference(ref: RssReference, forceEval: Boolean): Elements {
-            if (!ref.isEvaluated() || forceEval)
-                ref.writeToCache()
-            return ref.readFromCacheNotNull()
-        }
-
-        private fun elems2doc(elems: Elements): Document {
-            return Document("").also {
-                it.html(elems.html())
-            }
-        }
     }
 }

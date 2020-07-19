@@ -39,10 +39,10 @@ abstract class RssPollerRecyclerViewAdapter<VH: RecyclerView.ViewHolder>(activit
     protected abstract fun onBindViewHolder(holder: VH, position: Int, element: Element)
 
     private fun readElement(position: Int): Element {
-        return rssReference.readFromCache()!!.get(position)
+        return rssReference.cachedElements()!!.get(position)
     }
 
     override fun getItemCount(): Int {
-        return rssReference.readFromCache()?.size ?: 0
+        return rssReference.cachedElements()?.size ?: 0
     }
 }
