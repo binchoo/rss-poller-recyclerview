@@ -31,9 +31,9 @@ class MyRssRecyclerViewAdapter(activity: Activity, options: RssPollerRecyclerVie
 ```
  3. Create a RssFeed object. RssFeed abstracts a RSS document (any XML/HTML document) on the web.
  4. Point the place where you want to get by calling `RssFeed.getReference(cssQuery: String)`, `RssReference.child(cssQuery: String)`.
- 5. You can sort the elements reference by reference. Use `RssReference.sort()` where `SortStrategy` must be injected.
- 6. In order to make a recyclerview responsive to update of the RssReference, build `RssPollerRecyclerViewOptions`.
- 6. Inject it into your `RssPollerRecyclerViewAdapter`. Now then, let the recyclerview use your adapter.
+ 5. You can sort the elements reference by reference. Use `RssReference.sort()` where a `SortStrategy` must be injected.
+ 6. To let a recyclerview reflect the update the RssReference receives, build a `RssPollerRecyclerViewOptions`.
+ 6. Inject it into your `RssPollerRecyclerViewAdapter`. Now then, make the recyclerview use your adapter.
  ```kotlin
 //somewhere in MainActivity.kt
     fun loadRssFeed() {
