@@ -31,23 +31,27 @@ class MyRssRecyclerViewAdapterAdapter(activity: Activity, options: RssPollerRecy
 
  3. After instantiating an `RssPollerRecyclerViewAdapter` object, inject this into a `RecyclerView` object.
  ```kotlin
- //somewhere in MainActivity.kt
- fun loadRssFeed() {
-        RssFeed.getInstanceAsync("https://binchoo.tistory.com/rss") {
-            runOnUiThread {
-                setupRecyclerView(it)
-            }
-        }
-    }
+//somewhere in MainActivity.kt
+fun loadRssFeed() {
+     RssFeed.getInstanceAsync("https://binchoo.tistory.com/rss") {
+         runOnUiThread {
+             setupRecyclerView(it)
+         }
+     }
+ }
 
-    fun setupRecyclerView(feed: RssFeed) {
-        val ref = feed.getReference().child("item > title").sort(SortStrategy.TextLength(false))
-        val options = RssPollerRecyclerViewOptions.Builder()
-            .pollInterval(1500).reference(ref)
-            .build()
+ fun setupRecyclerView(feed: RssFeed) {
+     val ref = feed.getReference().child("item > title").sort(SortStrategy.TextLength(false))
+     val options = RssPollerRecyclerViewOptions.Builder()
+         .pollInterval(1500).reference(ref)
+         .build()
 
-        adapter = MyRssRecyclerViewAdapterAdapter(this, options)
-        recycler.adapter = adapter
-        recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-    }
+     adapter = MyRssRecyclerViewAdapterAdapter(this, options)
+     recycler.adapter = adapter
+     recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+ }
  ```
+## Fix Issues
+ - ~~reference lazy evaluation feature~~
+ - ~~race condition when executing lazy evaluation~~
+ - lazy evalutaion feature for document
