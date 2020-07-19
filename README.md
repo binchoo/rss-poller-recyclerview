@@ -3,7 +3,7 @@ A Kotlin abstraction for Android recyclerview adpater which executes periodic RS
 
 ## Example
  1. Declare a class that implements `rsspoller.recyclerview.RssPollerRecyclerViewAdapter`
- 2. Please inject an activity in order to provide the UI manipulation thread.
+ 2. Please inject an activity, which will provide the UI thread.
 ```kotlin
 class MyRssRecyclerViewAdapter(activity: Activity, options: RssPollerRecyclerViewOptions)
     : RssPollerRecyclerViewAdapter<MyRssRecyclerViewAdapter.ViewHolder>(activity, options) {
@@ -28,30 +28,30 @@ class MyRssRecyclerViewAdapter(activity: Activity, options: RssPollerRecyclerVie
     }
 }
 ```
-
- 3. After instantiating an `RssPollerRecyclerViewAdapter` object, inject this into a `RecyclerView` object.
+ 3. Create a RssFeed object. RssFeed abstracts a RSS document (any XML/HTML document) on the web.
+ 4. Point the place where you want to get by calling `RssFeed.getReference(cssQuery: String)`, `RssReference.child(cssQuery: String)`.
+ 5. You can sort the elements reference by reference. Use `RssFeed.sort()` where `SortStrategy` must be injected.
+ 6. In order to make a recyclerview responsive to update of the RssReference, build `RssPollerRecyclerViewOptions`.
+ 6. Inject it into your `RssPollerRecyclerViewAdapter`. Now then, let the recyclerview use your adapter.
  ```kotlin
 //somewhere in MainActivity.kt
-fun loadRssFeed() {
-     RssFeed.getInstanceAsync("https://binchoo.tistory.com/rss") {
-         runOnUiThread {
-             setupRecyclerView(it)
-         }
-     }
- }
+    fun loadRssFeed() {
+        feed = RssFeed.getInstance("https://binchoo.tistory.com/rss")
+    }
 
- fun setupRecyclerView(feed: RssFeed) {
-     val ref = feed.getReference().child("item > title").sort(SortStrategy.TextLength(false))
-     val options = RssPollerRecyclerViewOptions.Builder()
-         .pollInterval(1500).reference(ref)
-         .build()
+    fun setupRecyclerView(feed: RssFeed) {
+        val ref = feed.getReference().child("item > title").sort(SortStrategy.TextLength(false))
+        val options = RssPollerRecyclerViewOptions.Builder()
+            .pollInterval(5000).reference(ref)
+            .build()
 
-     adapter = MyRssRecyclerViewAdapter(this, options)
-     recycler.adapter = adapter
-     recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
- }
+        adapter = MyRssRecyclerViewAdapter(this, options)
+        recycler.adapter = adapter
+        recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    }
  ```
 ## Fix Issues
  - ~~Add lazy evaluation feature for RssReference~~
  - ~~Fix race condition when executing lazy evaluation~~
- - Add lazy evaluation feature for Document
+ - ~~Add lazy evaluation feature for Document~~
+ - ~~Fix malfunction of connection towoard RSS formatted document. (on JVM Kotlin environment only)
