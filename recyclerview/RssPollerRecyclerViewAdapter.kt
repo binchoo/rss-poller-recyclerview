@@ -6,7 +6,7 @@ import com.corndog.rssfeederrecyclerview.rssfeeder.RssPoller
 import org.jsoup.nodes.Element
 import rsspoller.RssReference
 
-abstract class RssPollerRecyclerView<VH: RecyclerView.ViewHolder>(activity: Activity, val options: RssPollerRecyclerViewOptions)
+abstract class RssPollerRecyclerViewAdapter<VH: RecyclerView.ViewHolder>(activity: Activity, val options: RssPollerRecyclerViewOptions)
     : RecyclerView.Adapter<VH>() {
 
     private val rssReference = options.reference
