@@ -1,5 +1,6 @@
 # rss-poller-recyclerview
-A Kotlin abstraction for Android recyclerview adpater which executes periodic RSS polling.
+RssPollerRecyclerViewAdapter is a Kotlin abstraction of Android RecyclerView.Adapter, which executes periodic RSS polling.
+Make your recyclerview responsive to the RSS feed.
 
 ## Example
  1. Declare a class that implements `rsspoller.recyclerview.RssPollerRecyclerViewAdapter`
