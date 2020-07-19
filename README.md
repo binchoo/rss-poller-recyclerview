@@ -5,8 +5,8 @@ A Kotlin abstraction for Android recyclerview adpater which executes periodic RS
  1. Declare a class that implements `rsspoller.recyclerview.RssPollerRecyclerViewAdapter`
  2. Please inject an activity in order to provide the UI manipulation thread.
 ```kotlin
-class MyRssRecyclerViewAdapterAdapter(activity: Activity, options: RssPollerRecyclerViewOptions)
-    : RssPollerRecyclerViewAdapter<MyRssRecyclerViewAdapterAdapter.ViewHolder>(activity, options) {
+class MyRssRecyclerViewAdapter(activity: Activity, options: RssPollerRecyclerViewOptions)
+    : RssPollerRecyclerViewAdapter<MyRssRecyclerViewAdapter.ViewHolder>(activity, options) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_rss_viewholder, parent, false)
