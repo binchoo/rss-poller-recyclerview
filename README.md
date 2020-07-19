@@ -46,7 +46,7 @@ fun loadRssFeed() {
          .pollInterval(1500).reference(ref)
          .build()
 
-     adapter = MyRssRecyclerViewAdapterAdapter(this, options)
+     adapter = MyRssRecyclerViewAdapter(this, options)
      recycler.adapter = adapter
      recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
  }
