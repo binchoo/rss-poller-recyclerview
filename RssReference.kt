@@ -12,7 +12,7 @@ class RssReference(private var connection: Connection,
     constructor(connection: Connection): this(connection, QUERY_DEFAULT, null)
     constructor(connection: Connection, cssQuery: String): this(connection, cssQuery, null)
 
-    private lateinit var document: Document //only the first reference can possess late-initialized document.
+    private lateinit var document: Document //only the first reference can possess a late-initialized document.
     var sortStrategy: SortStrategy<*>? = null
         private set
 
