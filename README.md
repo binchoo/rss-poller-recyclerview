@@ -52,6 +52,6 @@ fun loadRssFeed() {
  }
  ```
 ## Fix Issues
- - ~~lazy evaluation feature for RssReference~~
- - ~~race condition when executing lazy evaluation~~
- - lazy evaluation feature for Document
+ - ~~Add lazy evaluation feature for RssReference~~
+ - ~~Fix race condition when executing lazy evaluation~~
+ - Add lazy evaluation feature for Document
