@@ -55,4 +55,4 @@ class MyRssRecyclerViewAdapter(activity: Activity, options: RssPollerRecyclerVie
  - ~~Add lazy evaluation feature for RssReference~~
  - ~~Fix race condition when executing lazy evaluation~~
  - ~~Add lazy evaluation feature for Document~~
- - Fix malfunction of connection toward RSS formatted document. (on JVM Kotlin environment only)
+ - ~~Fix malfunction of connection toward RSS formatted document. (on JVM Kotlin environment only)~~
